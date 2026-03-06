@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ultra Web Mirror</title>
+<style>
+body{
+    margin:0;
+    background:linear-gradient(135deg,#141e30,#243b55);
+    font-family:Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.card{
+    background:#1e1e2f;
+    padding:40px;
+    border-radius:20px;
+    width:90%;
+    max-width:420px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(0,0,0,0.5);
+}
+h2{color:#fff;margin-bottom:20px;}
+input{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    margin-bottom:15px;
+}
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#00f5ff;
+    font-weight:bold;
+    cursor:pointer;
+}
+.status{
+    margin-top:15px;
+    color:#00ffcc;
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+<h2>⚡ Ultra Web Mirror v2</h2>
+<input id="url" placeholder="Enter Website URL">
+<button onclick="clone()">Clone & Download</button>
+<div class="status" id="status"></div>
+</div>
+
+<script>
+async function clone(){
+    const url=document.getElementById("url").value;
+    const status=document.getElementById("status");
+    status.innerText="Cloning started...";
+
+    const res=await fetch("/clone",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({url})
+    });
+
+    if(res.ok){
+        const blob=await res.blob();
+        const link=document.createElement("a");
+        link.href=window.URL.createObjectURL(blob);
+        link.download="site.zip";
+        link.click();
+        status.innerText="Download Complete ✔";
+    }else{
+        status.innerText="Clone Failed ❌";
+    }
+}
+</script>
+</body>
+  </html>
